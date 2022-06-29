@@ -1,8 +1,8 @@
 from django.shortcuts import render
 import logging
+from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseNotFound, HttpResponseRedirect
 from django.urls import reverse
-from django.template.loader import render_to_string
 
 monthly_challenges = {
     "january": "Hello this is january",
@@ -16,7 +16,7 @@ monthly_challenges = {
     "september": "Hello this is september",
     "october": "Hello this is october",
     "november": "Hello this is november",
-    "december": "Hello this is december"
+    "december": None
 }
 
 # Create your views here.
@@ -25,25 +25,13 @@ monthly_challenges = {
 #     return HttpResponse("Hello world")
 #
 
+
 def index(request):
-    list_items = ""
     months = list(monthly_challenges.keys())
 
-    for month in months:
-        capitalized_month = month.capitalize()
-        month_path = reverse("month-challenge", args=[month])
-        list_items += f"<li><a href=\"{month_path}\">{capitalized_month}</a></li>"
-
-    # If you want to return HTML
-    # response_data = """
-    #     <ul>
-    #         <li><a href="/challenges/"></a></li>
-    #     <ul>
-    # """
-
-    response_data = f"<ul>{list_items}</url>"
-
-    return HttpResponse(response_data)
+    return render(request, "challenges/index.html", {
+        "months": months
+    })
 
 
 def monthly_challenge_by_number(request, month):
@@ -64,10 +52,12 @@ def monthly_challenge_by_number(request, month):
 
 def monthly_challenge(request, month):
     try:
-        challenges_text = HttpResponse(monthly_challenges[month])
-        response_data = render_to_string("challenges/challenge.html")
+        challenges_text = monthly_challenges[month]
+        return render(request, "challenges/challenge.html", {
+            "text": challenges_text,
+            "month_name": month
+        })
     except Exception as ex:
         logging.error('Failed.', exc_info=ex)
         return HttpResponseNotFound(f"Could not find {month}")
-    return HttpResponse(response_data)
 

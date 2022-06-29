@@ -56,7 +56,10 @@ TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [
-            os.path.join(BASE_DIR, 'challenges/templates')
+            # If you do not install app, then you can set template paths
+            # This way.
+            # os.path.join(BASE_DIR, 'challenges/templates')
+            os.path.join(BASE_DIR, "template")
         ],
         'APP_DIRS': True,
         'OPTIONS': {
