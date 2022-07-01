@@ -1,7 +1,7 @@
 from django.shortcuts import render
 import logging
 from django.shortcuts import render
-from django.http import HttpResponse, HttpResponseNotFound, HttpResponseRedirect
+from django.http import Http404, HttpResponse, HttpResponseNotFound, HttpResponseRedirect
 from django.urls import reverse
 
 monthly_challenges = {
@@ -58,6 +58,6 @@ def monthly_challenge(request, month):
             "month_name": month
         })
     except Exception as ex:
-        logging.error('Failed.', exc_info=ex)
-        return HttpResponseNotFound(f"Could not find {month}")
+        # This will search and use the 404 HTML file, only visible in development.
+        raise Http404()
 
